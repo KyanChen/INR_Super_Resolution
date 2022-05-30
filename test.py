@@ -105,7 +105,7 @@ if __name__ == '__main__':
     spec = config['test_dataset']
     dataset = datasets.make(spec['dataset'])
     dataset = datasets.make(spec['wrapper'], args={'dataset': dataset})
-    loader = DataLoader(dataset, batch_size=spec['batch_size'], num_workers=4, pin_memory=True)
+    loader = DataLoader(dataset, batch_size=spec['batch_size'], num_workers=0, pin_memory=True, shuffle=False, drop_last=False)
 
     model_spec = torch.load(args.model)['model']
     model = models.make(model_spec, load_sd=True).cuda()
