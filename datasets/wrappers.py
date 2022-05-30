@@ -26,6 +26,8 @@ class SRImplicitPaired(Dataset):
 
     def __getitem__(self, idx):
         img_lr, img_hr = self.dataset[idx]
+        if img_hr.shape[-1] < 256:
+            img_hr = transforms.Resize([256, 256])(img_hr)
 
         s = img_hr.shape[-2] // img_lr.shape[-2]  # assume int scale
         if self.inp_size is None:
