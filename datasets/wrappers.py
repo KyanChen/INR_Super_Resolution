@@ -176,7 +176,8 @@ class SRImplicitUniformVaried(Dataset):
 
     def __getitem__(self, idx):
         img_lr, img_hr = self.dataset[idx]
-        p = idx / (len(self.dataset) - 1)
+        # p = idx / (len(self.dataset) - 1)
+        p = random.random()
         w_hr = round(self.size_min + (self.size_max - self.size_min) * p)
         img_hr = resize_fn(img_hr, w_hr)
 

@@ -2,6 +2,8 @@ import os
 from PIL import Image
 from tqdm import tqdm
 
+inp = r'H:\DataSet\SceneCls\UCMerced_LandUse\UCMerced_LandUse\Images'
+
 for size in [256, 128, 64, 32]:
     if size == 256:
         inp = './data1024x1024'
