@@ -92,8 +92,8 @@ def eval_psnr(loader, model, data_norm=None, eval_type=None, eval_bsize=None,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config')
-    parser.add_argument('--model')
+    parser.add_argument('--config', default='configs/test_UC_32_256_liif.yaml')
+    parser.add_argument('--model', default='save/_train_UC_32_256_liif/epoch-best.pth')
     parser.add_argument('--gpu', default='0')
     args = parser.parse_args()
 
@@ -105,13 +105,13 @@ if __name__ == '__main__':
     spec = config['test_dataset']
     dataset = datasets.make(spec['dataset'])
     dataset = datasets.make(spec['wrapper'], args={'dataset': dataset})
-    loader = DataLoader(dataset, batch_size=spec['batch_size'],
-        num_workers=8, pin_memory=True)
+    loader = DataLoader(dataset, batch_size=spec['batch_size'], num_workers=4, pin_memory=True)
 
     model_spec = torch.load(args.model)['model']
     model = models.make(model_spec, load_sd=True).cuda()
 
-    res = eval_psnr(loader, model,
+    res = eval_psnr(
+        loader, model,
         data_norm=config.get('data_norm'),
         eval_type=config.get('eval_type'),
         eval_bsize=config.get('eval_bsize'),

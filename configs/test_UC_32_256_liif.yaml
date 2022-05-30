@@ -1,0 +1,17 @@
+test_dataset:
+  dataset:
+    name: paired-image-folders
+    args:
+      root_path_1: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/32
+      root_path_2: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/256
+      split_file: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/UC_split.json
+      split_key: test
+      cache: none
+  wrapper:
+    name: sr-implicit-paired
+    args: {}
+  batch_size: 8
+
+data_norm:
+  inp: {sub: [0.5], div: [0.5]}
+  gt: {sub: [0.5], div: [0.5]}
