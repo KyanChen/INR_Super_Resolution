@@ -8,8 +8,9 @@ test_dataset:
       split_key: test
       cache: none
   wrapper:
-    name: sr-implicit-paired
-    args: {}
+    name: liff_test_warp
+    args:
+      scale_ratio: 8
   batch_size: 4
 
 data_norm:

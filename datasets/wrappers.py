@@ -12,6 +12,36 @@ from datasets import register
 from utils import to_pixel_samples
 
 
+@register('liff_test_warp')
+class LIIFTestWarp(Dataset):
+    def __init__(self, dataset, scale_ratio):
+        self.dataset = dataset
+        self.scale_ratio = scale_ratio
+        print('hr_scale: ', int(scale_ratio*32))
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        img_lr, img_hr = self.dataset[idx]
+        if img_hr.shape[-1] < 256:
+            img_hr = transforms.Resize([256, 256])(img_hr)
+
+        img_hr = transforms.Resize([self.scale_ratio*32, self.scale_ratio*32])(img_hr)
+
+        hr_coord, hr_rgb = to_pixel_samples(img_hr.contiguous())
+
+        cell = torch.ones_like(hr_coord)
+        cell[:, 0] *= 2 / img_hr.shape[-2]
+        cell[:, 1] *= 2 / img_hr.shape[-1]
+
+        return {
+            'inp': img_lr,
+            'coord': hr_coord,
+            'cell': cell,
+            'gt': hr_rgb
+        }
+
 @register('sr-implicit-paired')
 class SRImplicitPaired(Dataset):
 
