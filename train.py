@@ -209,7 +209,7 @@ def main(config_, save_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='configs/train_UC_32_256_liif.yaml')
-    parser.add_argument('--name', default=None)
+    parser.add_argument('--name', default='EXP20220610_0')
     parser.add_argument('--tag', default=None)
     parser.add_argument('--gpu', default='0')
     args = parser.parse_args()
@@ -225,6 +225,6 @@ if __name__ == '__main__':
         save_name = '_' + args.config.split('/')[-1][:-len('.yaml')]
     if args.tag is not None:
         save_name += '_' + args.tag
-    save_path = os.path.join('./save', save_name)
+    save_path = os.path.join('./checkpoints', save_name)
 
     main(config, save_path)

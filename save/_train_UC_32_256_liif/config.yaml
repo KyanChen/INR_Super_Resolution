@@ -14,8 +14,7 @@ train_dataset:
       size_max: 256
       sample_q: 1024
       augment: true
-  batch_size: 64
-
+  batch_size: 16
 val_dataset:
   dataset:
     name: paired-image-folders
@@ -31,11 +30,17 @@ val_dataset:
     args:
       sample_q: 1024
   batch_size: 4
-
 data_norm:
-  inp: {sub: [0.5], div: [0.5]}
-  gt: {sub: [0.5], div: [0.5]}
-
+  inp:
+    sub:
+    - 0.5
+    div:
+    - 0.5
+  gt:
+    sub:
+    - 0.5
+    div:
+    - 0.5
 model:
   name: liif
   args:
@@ -47,16 +52,20 @@ model:
       name: mlp
       args:
         out_dim: 3
-        hidden_list: [256, 256, 256, 256]
-
+        hidden_list:
+        - 256
+        - 256
+        - 256
+        - 256
 optimizer:
   name: adam
   args:
-    lr: 1.e-4
+    lr: 0.0001
 epoch_max: 2000
 multi_step_lr:
-  milestones: [500, 1000]
+  milestones:
+  - 500
+  - 1000
   gamma: 0.1
-
 epoch_val: 1
-epoch_save: 200
+epoch_save: 100
