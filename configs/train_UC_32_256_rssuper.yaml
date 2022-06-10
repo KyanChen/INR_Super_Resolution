@@ -1,0 +1,69 @@
+train_dataset:
+  dataset:
+    name: paired-image-folders
+    args:
+      root_path_1: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/32
+      root_path_2: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/256
+      split_file: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/UC_split.json
+      split_key: train
+      cache: none
+  wrapper:
+    name: rs-sr
+    args:
+      size_min: 32
+      size_max: 256
+      sample_q: 1024
+      augment: True
+  batch_size: 16
+
+val_dataset:
+  dataset:
+    name: paired-image-folders
+    args:
+      root_path_1: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/32
+      root_path_2: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/256
+      split_file: H:/DataSet/SceneCls/UCMerced_LandUse/UCMerced_LandUse/UC_split.json
+      split_key: val
+      first_k: 64
+      cache: none
+  wrapper:
+    name: sr-implicit-paired
+    args:
+      sample_q: 1024
+      val_mode: True
+  batch_size: 4
+
+data_norm:
+  inp: {sub: [0.5], div: [0.5]}
+  gt: {sub: [0.5], div: [0.5]}
+
+model:
+  name: rs_super
+  args:
+    input_rgb: False
+    encoder_spec:
+      name: edsr-baseline
+      args:
+        no_upsampling: true
+    neck:
+      name: transformer_neck
+      args:
+        out_dim: 256
+        num_encoder_layers: 3
+    decoder:
+      name: siren_modulation
+      args:
+        num_inner_layers: 4
+        is_shift: True
+
+optimizer:
+  name: adam
+  args:
+    lr: 1.e-4
+epoch_max: 2000
+multi_step_lr:
+  milestones: [500, 1000]
+  gamma: 0.1
+
+epoch_val: 1
+epoch_save: 100

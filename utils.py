@@ -5,6 +5,7 @@ import math
 
 import torch
 import numpy as np
+from einops import rearrange
 from torch.optim import SGD, Adam
 from tensorboardX import SummaryWriter
 
@@ -115,6 +116,27 @@ def make_coord(shape, ranges=None, flatten=True):
     if flatten:
         ret = ret.view(-1, ret.shape[-1])
     return ret
+
+
+def to_coordinates(size=(56, 56), return_map=True):
+    """Converts an image to a set of coordinates and features.
+
+    Args:
+        img (torch.Tensor): Shape (channels, height, width).
+    """
+    # H, W
+    # Coordinates are indices of all non zero locations of a tensor of ones of
+    # same shape as spatial dimensions of image
+    coordinates = torch.ones(size).nonzero(as_tuple=False).float()
+    # Normalize coordinates to lie in [-.5, .5]
+    coordinates[..., 0] = coordinates[..., 0] / (size[0] - 1) - 0.5
+    coordinates[..., 1] = coordinates[..., 1] / (size[1] - 1) - 0.5
+    # Convert to range [-1, 1]
+    coordinates *= 2
+    if return_map:
+        coordinates = rearrange(coordinates, '(H W) C -> H W C', H=size[0])
+    # [y, x]
+    return coordinates
 
 
 def to_pixel_samples(img):
